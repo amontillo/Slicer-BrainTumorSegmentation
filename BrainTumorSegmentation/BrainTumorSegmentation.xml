@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<executable>
+  <category>Examples</category>
+  <title>Brain Tumor Segmentation</title>
+  <description><![CDATA[Segmentent brain volumes with tumors into 3 classes: tumor, edema, healthy tissue using an algorithm based on a voxel classifier using long range intensity features from multiple channels. Load channels (e.g. T1,T2,FLAIR).  This module uses the Slicer Command Line Interface (CLI).]]></description>
+  <version>0.1.0.$Revision$(alpha)</version>
+  <documentation-url>http://www.slicer.org/slicerWiki/index.php/Documentation/4.2/Modules/BrainTumorSegmentation</documentation-url>
+  <license>Slicer</license>
+  <contributor>Albert Montillo (GE Research)</contributor>
+  <acknowledgements><![CDATA[This work is part of neuroimage analysis center (NAC), funded in part by the National Instittues of Health]]></acknowledgements>
+  <parameters>
+    <label>IO</label>
+    <description><![CDATA[Input/output parameters]]></description>
+	<file>
+		<name>strForestDescriptionFile</name>
+		<index>0</index>
+        <label>Forest file</label>
+        <default>..</default>
+		<description>forest header file</description>		
+    </file>
+    <image>
+      <name>strT1VolumeFilename</name>
+      <label>T1 Volume</label>
+      <channel>input</channel>
+      <index>1</index>
+      <description><![CDATA[T1 weighted MR volume]]></description>
+    </image>
+    <image>
+      <name>strT2VolumeFilename</name>
+      <label>T2 Volume</label>
+      <channel>input</channel>
+      <index>2</index>
+      <description><![CDATA[T2 weighted MR volume]]></description>
+    </image>	
+    <image>
+      <name>strT1CVolumeFilename</name>
+      <label>T1C Volume</label>
+      <channel>input</channel>
+      <index>3</index>
+      <description><![CDATA[T1 contrast enhanced MR volume]]></description>
+    </image>	
+	<image>
+      <name>strFLAIRVolumeFilename</name>
+      <label>FLAIR Volume</label>
+      <channel>input</channel>
+      <index>4</index>
+      <description><![CDATA[Fluid Attenuated Inversion Recovery MR volume]]></description>
+    </image>
+	<image type="label">
+      <name>strTissueSegmentationVolumeFilename</name>
+      <label>Tissue Segmentation Volume</label>
+      <channel>output</channel>
+      <index>5</index>
+      <description><![CDATA[Tissue Segmentation output]]></description>
+    </image>
+  </parameters>
+</executable>

@@ -1,0 +1,149 @@
+#pragma once
+
+#include "itkImage.h"
+
+typedef itk::Image<ushort, 3> ImageUShortVolumeType;
+
+// these numbers must be sequential 0,1,2,3 
+enum FEATURE_VOLUME_TYPE { 
+	FEATURE_VOLUME_TYPE_min=0,
+	FEATURE_VOLUME_TYPE_T1=FEATURE_VOLUME_TYPE_min, 
+	FEATURE_VOLUME_TYPE_T2=1, 
+	FEATURE_VOLUME_TYPE_FLAIR=2, 
+	FEATURE_VOLUME_TYPE_T1C=3, 
+	FEATURE_VOLUME_TYPE_T1m=4,   // mode shift
+	FEATURE_VOLUME_TYPE_T2m=5, 
+	FEATURE_VOLUME_TYPE_FLAIRm=6, 
+	FEATURE_VOLUME_TYPE_T1Cm=7,
+	FEATURE_VOLUME_TYPE_T1Gxy=8,   // gradient
+	FEATURE_VOLUME_TYPE_T1Gxz=9,
+	FEATURE_VOLUME_TYPE_T1Gyz = 10,
+	FEATURE_VOLUME_TYPE_T2Gxy=11,
+	FEATURE_VOLUME_TYPE_T2Gxz=12,
+	FEATURE_VOLUME_TYPE_T2Gyz = 13,
+	FEATURE_VOLUME_TYPE_FLAIRGxy=14,
+	FEATURE_VOLUME_TYPE_FLAIRGxz=15,
+	FEATURE_VOLUME_TYPE_FLAIRGyz = 16,
+	FEATURE_VOLUME_TYPE_T1CGxy=17,
+	FEATURE_VOLUME_TYPE_T1CGxz=18,
+	FEATURE_VOLUME_TYPE_T1CGyz = 19,
+	FEATURE_VOLUME_TYPE_T1LBPxy=20,  // LBP
+	FEATURE_VOLUME_TYPE_T1LBPxz=21,
+	FEATURE_VOLUME_TYPE_T1LBPyz = 22,
+	FEATURE_VOLUME_TYPE_T2LBPxy=23,
+	FEATURE_VOLUME_TYPE_T2LBPxz=24,
+	FEATURE_VOLUME_TYPE_T2LBPyz = 25,
+	FEATURE_VOLUME_TYPE_FLAIRLBPxy=26,
+	FEATURE_VOLUME_TYPE_FLAIRLBPxz=27,
+	FEATURE_VOLUME_TYPE_FLAIRLBPyz =28,
+	FEATURE_VOLUME_TYPE_T1CLBPxy=29,
+	FEATURE_VOLUME_TYPE_T1CLBPxz=30,
+	FEATURE_VOLUME_TYPE_T1CLBPyz = 31,
+	FEATURE_VOLUME_TYPE_max=FEATURE_VOLUME_TYPE_T1CLBPyz,   // <== Adding a new enum? MUST update  FEATURE_VOLUME_TYPE_max too 
+	FEATURE_VOLUME_TYPE_count=(FEATURE_VOLUME_TYPE_max-FEATURE_VOLUME_TYPE_min)+1
+};
+
+static const char* arrstrFEATURE_VOLUME_TYPE[]={
+"T1",
+"T2",
+"FLAIR",
+"T1C" ,
+"T1m"  ,
+"T2m" ,
+"FLAIRm",
+"T1Cm",
+"T1Gxy",
+"T1Gxz",
+"T1Gyz" , 
+"T2Gxy",
+"T2Gxz",
+"T2Gyz" ,
+"FLAIRGxy",
+"FLAIRGxz",
+"FLAIRGyz",
+"T1CGxy",
+"T1CGxz",
+"T1CGyz",
+"T1LBPxy",
+"T1LBPxz",
+"T1LBPyz" ,
+"T2LBPxy",
+"T2LBPxz",
+"T2LBPyz",
+"FLAIRLBPxy",
+"FLAIRLBPxz",
+"FLAIRLBPyz",
+"T1CLBPxy",
+"T1CLBPxz",
+"T1CLBPyz"
+};
+
+
+struct FeatureVolumeTypeManager   // space of functions that manipulate feature volume type
+{
+	static int featureVolumeName_To_EnumIdentifier(string strFeatureVolumeName)	{
+		to_lower(strFeatureVolumeName);
+		int output = -1;
+		for (int i = 0; i < FEATURE_VOLUME_TYPE_count; i++)
+		{ string lowerFVT=arrstrFEATURE_VOLUME_TYPE[i];
+		  to_lower(lowerFVT);
+		  if (strFeatureVolumeName == lowerFVT ) { output = i;  break; }
+		}
+		return output;
+	}
+
+	static int featureEnumToBaseChannel(int featureVolumeEnum) {
+		int nBaseChannel=FEATURE_VOLUME_TYPE_T1;
+
+		switch (featureVolumeEnum) {
+			case FEATURE_VOLUME_TYPE_T1:
+			case FEATURE_VOLUME_TYPE_T1m:
+			case FEATURE_VOLUME_TYPE_T1Gxy:
+			case FEATURE_VOLUME_TYPE_T1Gxz:
+			case FEATURE_VOLUME_TYPE_T1Gyz:
+			case FEATURE_VOLUME_TYPE_T1LBPxy:
+			case FEATURE_VOLUME_TYPE_T1LBPxz:
+			case FEATURE_VOLUME_TYPE_T1LBPyz:
+				nBaseChannel=FEATURE_VOLUME_TYPE_T1;
+				break;
+			case FEATURE_VOLUME_TYPE_T2:
+			case FEATURE_VOLUME_TYPE_T2m: 
+			case FEATURE_VOLUME_TYPE_T2Gxy:
+			case FEATURE_VOLUME_TYPE_T2Gxz:
+			case FEATURE_VOLUME_TYPE_T2Gyz:
+			case FEATURE_VOLUME_TYPE_T2LBPxy:
+			case FEATURE_VOLUME_TYPE_T2LBPxz:
+			case FEATURE_VOLUME_TYPE_T2LBPyz:
+				nBaseChannel=FEATURE_VOLUME_TYPE_T2;
+				break;
+
+			case FEATURE_VOLUME_TYPE_FLAIR:
+			case FEATURE_VOLUME_TYPE_FLAIRm:
+			case FEATURE_VOLUME_TYPE_FLAIRGxy:
+			case FEATURE_VOLUME_TYPE_FLAIRGxz:
+			case FEATURE_VOLUME_TYPE_FLAIRGyz:
+			case FEATURE_VOLUME_TYPE_FLAIRLBPxy:
+			case FEATURE_VOLUME_TYPE_FLAIRLBPxz:
+			case FEATURE_VOLUME_TYPE_FLAIRLBPyz:
+				nBaseChannel=FEATURE_VOLUME_TYPE_FLAIR;
+				break;
+
+			case FEATURE_VOLUME_TYPE_T1C:
+			case FEATURE_VOLUME_TYPE_T1Cm:
+			case FEATURE_VOLUME_TYPE_T1CGxy:
+			case FEATURE_VOLUME_TYPE_T1CGxz:
+			case FEATURE_VOLUME_TYPE_T1CGyz:
+			case FEATURE_VOLUME_TYPE_T1CLBPxy:
+			case FEATURE_VOLUME_TYPE_T1CLBPxz:
+			case FEATURE_VOLUME_TYPE_T1CLBPyz:
+				nBaseChannel=FEATURE_VOLUME_TYPE_T1C;
+				break;
+
+		};
+
+		return nBaseChannel;
+ 	}
+
+};
+
+
